@@ -139,13 +139,19 @@ postulate
     {-# REWRITE rwPathConst2 #-}
 
 postulate
-    Gph2 : ∀ {ℓ} (i : I) (A1 A2 : Set ℓ) (B : A1 → A2 → Set ℓ) → Set (ℓ)
+    Gph2 : ∀ {ℓ} (i : I) (A1 A2 : Set ℓ) (B : A1 × A2 → Set ℓ) → Set (ℓ)
 
-    g2rw0 : ∀ {ℓ} (A1 A2 : Set ℓ) (B : A1 → A2 → Set ℓ) → Gph2 i0 A1 A2 B ≡ (A1 × A2)
+    g2rw0 : ∀ {ℓ} (A1 A2 : Set ℓ) (B : A1 × A2 → Set ℓ) → Gph2 i0 A1 A2 B ≡ (A1 × A2)
     {-# REWRITE g2rw0 #-}
 
-    g2pair : ∀ {ℓ} {A1 A2 : Set ℓ} {B : A1 → A2 → Set ℓ} (i : I)
-             → (a1 : A1) (a2 : A2) (b : (i ≡ i1) → B a1 a2) → Gph2 i A1 A2 B
+    g2pair : ∀ {ℓ} {A1 A2 : Set ℓ} {B : A1 × A2 → Set ℓ} (i : I)
+             → (a : A1 × A2) (b : (i ≡ i1) → B a) → Gph2 i A1 A2 B
+
+    g2fst : ∀ {ℓ} {A1 A2 : Set ℓ} {B : A1 × A2 → Set ℓ} (i : I)
+            → (g : Gph2 i A1 A2 B) → (A1 × A2)
+
+    g2snd : ∀ {ℓ} {A1 A2 : Set ℓ} {B : A1 × A2 → Set ℓ}
+            → (g : Gph2 i1 A1 A2 B) → B (g2fst i1 g)
 
 postulate
     Gph1 : ∀ {ℓ} (i : I) (A : Set ℓ) (B : A → Set ℓ) → Set (ℓ)
@@ -224,15 +230,15 @@ module paramId {ℓ} (A : Set ℓ) (pdA : isPathDiscrete A) (B : A → Set ℓ)
 
 
 module paramId2 {ℓ} (A1 A2 : Set ℓ) (pdA1 : isPathDiscrete A1)
-                                    (pdA2 : isPathDiscrete A2)  (B : A1 → A2 → Set ℓ)
-                   (a1 : A1) (a2 : A2) (b : B a1 a2) (α : PolyId ℓ) where
+                                    (pdA2 : isPathDiscrete A2)  (B : A1 × A2 → Set ℓ)
+                   (a : A1 × A2) (b : B a) (α : PolyId ℓ) where
 
 
     lemma0 : (i : I) → Gph2 i A1 A2 B
-    lemma0 i = α (Gph2 i A1 A2 B) (g2pair i a1 a2 (λ _ → b))
+    lemma0 i = α (Gph2 i A1 A2 B) (g2pair i a (λ _ → b))
 
-    -- lemma1 : B (g1fst i1 (lemma0 i1))
-    -- lemma1 = g1snd (lemma0 i1)
+    lemma1 : B (g2fst i1 (lemma0 i1))
+    lemma1 = g2snd (lemma0 i1)
 
     -- lemma2 : Path (λ _ → A) (α A a) (g1fst i1 (lemma0 i1))
     -- lemma2 = pabs (λ i → g1fst i (lemma0 i))
