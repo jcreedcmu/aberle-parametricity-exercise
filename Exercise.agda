@@ -233,18 +233,23 @@ module paramId2 {ℓ} (A1 A2 : Set ℓ) (pdA1 : isPathDiscrete A1)
                                     (pdA2 : isPathDiscrete A2)  (B : A1 × A2 → Set ℓ)
                    (a : A1 × A2) (b : B a) (α : PolyId ℓ) where
 
-
     lemma0 : (i : I) → Gph2 i A1 A2 B
     lemma0 i = α (Gph2 i A1 A2 B) (g2pair i a (λ _ → b))
 
     lemma1 : B (g2fst i1 (lemma0 i1))
     lemma1 = g2snd (lemma0 i1)
 
-    -- lemma2 : Path (λ _ → A) (α A a) (g1fst i1 (lemma0 i1))
-    -- lemma2 = pabs (λ i → g1fst i (lemma0 i))
+    a1 = fst a
+    a2 = snd a
+    lemma2 : Path (λ _ → A1 × A2) (α A1 a1 , α A2 a2) (g2fst i1 (lemma0 i1))
+    lemma2 = {!!}
+    --    lemma2 = pabs (λ i → g1fst i (lemma0 i))
 
-    -- substLemma : B (α A a)
-    -- substLemma = transp⁻¹ B (mkInv idToPath pdA lemma2) lemma1
+    pdA : isPathDiscrete (A1 × A2)
+    pdA = {!!}
+
+    substLemma : B (α A1 (fst a) , α A2 (snd a))
+    substLemma = transp⁻¹ B (mkInv idToPath pdA lemma2) lemma1
 
 polyId : ∀ {ℓ} (A : Set ℓ) (pdA : isPathDiscrete A) (a : A)
          → (α : PolyId ℓ) → α A a ≡ a
