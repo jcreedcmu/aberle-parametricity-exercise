@@ -147,8 +147,17 @@ postulate
     g2pair : ∀ {ℓ} {A1 A2 : Set ℓ} {B : A1 × A2 → Set ℓ} (i : I)
              → (a : A1 × A2) (b : (i ≡ i1) → B a) → Gph2 i A1 A2 B
 
+    g2pair0 : ∀ {ℓ} {A1 A2 : Set ℓ} {B : A1 × A2 → Set ℓ}
+              → (a : A1 × A2) (b : (i0 ≡ i1) → B a)
+              → g2pair {B = B} i0 a b ≡ a
+    {-# REWRITE g2pair0 #-}
+
     g2fst : ∀ {ℓ} {A1 A2 : Set ℓ} {B : A1 × A2 → Set ℓ} (i : I)
             → (g : Gph2 i A1 A2 B) → (A1 × A2)
+
+    g2fst0 : ∀ {ℓ} {A1 A2 : Set ℓ} {B : A1 × A2 → Set ℓ}
+             → (g : Gph2 i0 A1 A2 B) → g2fst {B = B} i0 g ≡ g
+    {-# REWRITE g2fst0 #-}
 
     g2snd : ∀ {ℓ} {A1 A2 : Set ℓ} {B : A1 × A2 → Set ℓ}
             → (g : Gph2 i1 A1 A2 B) → B (g2fst i1 g)
@@ -242,7 +251,7 @@ module paramId2 {ℓ} (A1 A2 : Set ℓ) (pdA1 : isPathDiscrete A1)
     a1 = fst a
     a2 = snd a
     lemma2 : Path (λ _ → A1 × A2) (α A1 a1 , α A2 a2) (g2fst i1 (lemma0 i1))
-    lemma2 = {!!}
+    lemma2 = pabs (λ i → {! g2fst i0 (lemma0 i0)!})
     --    lemma2 = pabs (λ i → g1fst i (lemma0 i))
 
     pdA : isPathDiscrete (A1 × A2)
