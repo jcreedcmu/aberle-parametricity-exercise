@@ -1,0 +1,5 @@
+name: Exercise
+include:
+  .
+depend:
+  standard-library

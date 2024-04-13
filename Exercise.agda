@@ -1,4 +1,7 @@
 {-# OPTIONS --rewriting --cohesion --flat-split --without-K #-}
+
+{-- This is derived from https://github.com/cbaberle/Parametricity-via-Cohesion --}
+
 module Exercise where
 
 open import Agda.Primitive
