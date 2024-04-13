@@ -228,8 +228,8 @@ module paramId2 {ℓ} (A1 A2 : Set ℓ) (pdA1 : isPathDiscrete A1)
                    (a1 : A1) (a2 : A2) (b : B a1 a2) (α : PolyId ℓ) where
 
 
-    -- lemma0 : (i : I) → Gph1 i A B
-    -- lemma0 i = α (Gph1 i A B) (g1pair i a (λ _ → b))
+    lemma0 : (i : I) → Gph2 i A1 A2 B
+    lemma0 i = α (Gph2 i A1 A2 B) (g2pair i a1 a2 (λ _ → b))
 
     -- lemma1 : B (g1fst i1 (lemma0 i1))
     -- lemma1 = g1snd (lemma0 i1)
