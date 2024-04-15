@@ -75,40 +75,34 @@ open cohesion
 
 postulate
     I : Set₀
-    ix iy i1 : I
+    i0 i1 : I
 
 
 postulate
-    Path : ∀ {ℓ} (A : I → Set ℓ) (ax : A ix) (ay : A iy) (a1 : A i1) → Set ℓ
+    Path : ∀ {ℓ} (A : I → Set ℓ) (a0 : A i0) (a1 : A i1) → Set ℓ
 
 
     pabs : ∀ {ℓ} {A : I → Set ℓ}
-           → (f : (i : I) → A i) → Path A (f ix) (f iy) (f i1)
+           → (f : (i : I) → A i) → Path A (f i0) (f i1)
 
 
-    papp : ∀ {ℓ} {A : I → Set ℓ} {ax : A ix} {ay : A iy} {a1 : A i1}
-           → Path A ax ay a1 → (i : I) → A i
+    papp : ∀ {ℓ} {A : I → Set ℓ} {a0 : A i0} {a1 : A i1}
+           → Path A a0 a1 → (i : I) → A i
 
 
     pβ : ∀ {ℓ} {A : I → Set ℓ} (f : (i : I) → A i)
            → (i : I) → papp (pabs f) i ≡ f i
     {-# REWRITE pβ #-}
-
-    pappx : ∀ {ℓ} {A : I → Set ℓ} {ax : A ix} {ay : A iy} {a1 : A i1}
-            → (p : Path A ax ay a1) → papp p ix ≡ ax
-    {-# REWRITE pappx #-}
-
-    pappy : ∀ {ℓ} {A : I → Set ℓ} {ax : A ix} {ay : A iy} {a1 : A i1}
-            → (p : Path A ax ay a1) → papp p iy ≡ ay
-    {-# REWRITE pappy #-}
-
-    papp1 : ∀ {ℓ} {A : I → Set ℓ} {ax : A ix} {ay : A iy} {a1 : A i1}
-            → (p : Path A ax ay a1) → papp p i1 ≡ a1
+    papp0 : ∀ {ℓ} {A : I → Set ℓ} {a0 : A i0} {a1 : A i1}
+            → (p : Path A a0 a1) → papp p i0 ≡ a0
+    {-# REWRITE papp0 #-}
+    papp1 : ∀ {ℓ} {A : I → Set ℓ} {a0 : A i0} {a1 : A i1}
+            → (p : Path A a0 a1) → papp p i1 ≡ a1
     {-# REWRITE papp1 #-}
 
 
 idToPath : ∀ {ℓ} {A : Set ℓ} {a b : A}
-           → a ≡ b → Path (λ _ → A) a a b
+           → a ≡ b → Path (λ _ → A) a b
 idToPath {a = a} refl = pabs (λ _ → a)
 
 
@@ -119,10 +113,10 @@ isPathDiscrete {ℓ = ℓ} A =
 
 postulate
     pathConst1 : ∀ {@♭ ℓ : Level} {@♭ A : Set ℓ} {a b : A}
-                   → isDiscrete A → (e : Path (λ _ → A) a a b)
+                   → isDiscrete A → (e : Path (λ _ → A) a b)
                    → Σ (a ≡ b) (λ p → idToPath p ≡ e)
     pathConst2 : ∀ {@♭ ℓ : Level} {@♭ A : Set ℓ} {a b : A}
-                   → (dA : isDiscrete A) → (e : Path (λ _ → A) a a b)
+                   → (dA : isDiscrete A) → (e : Path (λ _ → A) a b)
                    → (q : a ≡ b) → (r : idToPath q ≡ e)
                    → pathConst1 dA e ≡ (q , r)
 
@@ -144,85 +138,81 @@ postulate
     {-# REWRITE rwPathConst2 #-}
 
 postulate
-    Gph1 : ∀ {ℓ} (i : I) (A1 A2 : Set ℓ) (B : A1 × A2 → Set ℓ) → Set (ℓ)
+    Gph2 : ∀ {ℓ} (ix iy : I) (A1 A2 : Set ℓ) (B : A1 × A2 → Set ℓ) → Set (ℓ)
 
-    g1rwx : ∀ {ℓ} (A1 A2 : Set ℓ) (B : A1 × A2 → Set ℓ) → Gph1 ix A1 A2 B ≡ A1
-    {-# REWRITE g1rwx #-}
+    g1rw0x : ∀ {ℓ} (A1 A2 : Set ℓ) (B : A1 × A2 → Set ℓ) → Gph2 i1 i0 A1 A2 B ≡ A1
+    {-# REWRITE g1rw0x #-}
 
-    g1rwy : ∀ {ℓ} (A1 A2 : Set ℓ) (B : A1 × A2 → Set ℓ) → Gph1 iy A1 A2 B ≡ A2
-    {-# REWRITE g1rwy #-}
-
-    g1pair : ∀ {ℓ} {A1 A2 : Set ℓ} {B : A1 × A2 → Set ℓ} (i : I)
-             → (a : A1 × A2) → (b : (i ≡ i1) → B a) → Gph1 i A1 A2 B
-
-    g1pairx : ∀ {ℓ} {A1 A2 : Set ℓ} {B : A1 × A2 → Set ℓ}
-              → (a : A1 × A2) → (b : (ix ≡ i1) → B a)
-              → g1pair {B = B} ix a b ≡ fst a
-    {-# REWRITE g1pairx #-}
-
-    g1pairy : ∀ {ℓ} {A1 A2 : Set ℓ} {B : A1 × A2 → Set ℓ}
-              → (a : A1 × A2) → (b : (iy ≡ i1) → B a)
-              → g1pair {B = B} iy a b ≡ snd a
-    {-# REWRITE g1pairy #-}
-
-    g1fstx : ∀ {ℓ} {A1 A2 : Set ℓ} {B : A1 × A2 → Set ℓ}
-            → (g : Gph1 ix A1 A2 B) → A1
-
-    g1fsty : ∀ {ℓ} {A1 A2 : Set ℓ} {B : A1 × A2 → Set ℓ}
-            → (g : Gph1 iy A1 A2 B) → A2
-
-    g1beta1 : ∀ {ℓ} {A1 A2 : Set ℓ} {B : A1 × A2 → Set ℓ} (i : I)
-              → (a : A1 × A2) → (b : (i ≡ i1) → B a)
-              → g1fst i (g1pair {B = B} i a b) ≡ a
-    {-# REWRITE g1beta1 #-}
-
-    g1fstx : ∀ {ℓ} {A1 A2 : Set ℓ} {B : A1 × A2 → Set ℓ}
-             → (g : Gph1 ix A1 A2 B) → g1fst {B = B} ix g ≡ {!!}
-    {-# REWRITE g1fstx #-}
+    g1rw0y : ∀ {ℓ} (A1 A2 : Set ℓ) (B : A1 × A2 → Set ℓ) → Gph2 i0 i1 A1 A2 B ≡ A2
+    {-# REWRITE g1rw0y #-}
 
 
-    -- g1snd : ∀ {ℓ} {A : Set ℓ} {B : A → Set ℓ}
-    --         → (g : Gph1 i1 A B) → B (g1fst i1 g)
+    g1pair : ∀ {ℓ} {A1 A2 : Set ℓ} {B : A1 × A2 → Set ℓ} (ix iy : I)
+             → (a : A1 × A2) (b : (ix ≡ i1) → (iy ≡ i1) → B a) → Gph2 ix iy A1 A2 B
 
-    -- g1beta2 : ∀ {ℓ} {A : Set ℓ} {B : A → Set ℓ}
-    --           → (a : A) → (b : (i1 ≡ i1) → B a)
-    --           → g1snd (g1pair {B = B} i1 a b) ≡ b refl
-    -- {-# REWRITE g1beta2 #-}
+    g1pair10 : ∀ {ℓ} {A1 A2 : Set ℓ} {B : A1 × A2 → Set ℓ}
+              → (a : A1 × A2) → (b : (i1 ≡ i1) → (i0 ≡ i1) → B a)
+              → g1pair {B = B} i1 i0 a b ≡ fst a
+    {-# REWRITE g1pair10 #-}
 
+    g1pair01 : ∀ {ℓ} {A1 A2 : Set ℓ} {B : A1 × A2 → Set ℓ}
+              → (a : A1 × A2) → (b : (i0 ≡ i1) → (i1 ≡ i1) → B a)
+              → g1pair {B = B} i0 i1 a b ≡ snd a
+    {-# REWRITE g1pair01 #-}
 
--- strBpt : (i0 ≡ i1) → ⊥
--- strBpt p = g1snd (transp (λ i → Gph1 i ⊤ (λ _ → ⊥)) p tt)
+    g1fstx : ∀ {ℓ} {A1 A2 : Set ℓ} {B : A1 × A2 → Set ℓ} (iy : I)
+            → (g : Gph2 i1 iy A1 A2 B) → A1
 
+    g1fsty : ∀ {ℓ} {A1 A2 : Set ℓ} {B : A1 × A2 → Set ℓ} (ix : I)
+            → (g : Gph2 ix i1 A1 A2 B) → A2
 
--- apg1pair : ∀ {ℓ} {A : Set ℓ} {B : A → Set ℓ}
---            → {a b : A} {aB : B a} {bB : B b}
---            → (p : a ≡ b) → aB ≡ transp⁻¹ B p bB
---            → (i : I) → g1pair i a (λ _ → aB) ≡ g1pair i b (λ _ → bB)
--- apg1pair refl refl i = refl
+    g1beta1x : ∀ {ℓ} {A1 A2 : Set ℓ} {B : A1 × A2 → Set ℓ} (iy : I)
+              → (a : A1 × A2) (b : (i1 ≡ i1) → (iy ≡ i1) → B a)
+              → g1fstx iy (g1pair {B = B} i1 iy a b) ≡ fst a
+    {-# REWRITE g1beta1x #-}
 
--- apg1pair0 : ∀ {ℓ} {A : Set ℓ} {B : A → Set ℓ}
---             → {a b : A} {aB : B a} {bB : B b}
---             → (p : a ≡ b) → (q : aB ≡ transp⁻¹ B p bB)
---             → apg1pair p q i0 ≡ p
--- apg1pair0 refl refl = refl
--- {-# REWRITE apg1pair0 #-}
+    g1beta1y : ∀ {ℓ} {A1 A2 : Set ℓ} {B : A1 × A2 → Set ℓ} (ix : I)
+              → (a : A1 × A2) (b : (ix ≡ i1) → (i1 ≡ i1) → B a)
+              → g1fsty ix (g1pair {B = B} ix i1 a b) ≡ snd a
+    {-# REWRITE g1beta1y #-}
 
+    g1fst0x : ∀ {ℓ} {A1 A2 : Set ℓ} {B : A1 × A2 → Set ℓ}
+             → (g : Gph2 i1 i0 A1 A2 B) → g1fstx {B = B} i0 g ≡ g
+    {-# REWRITE g1fst0x #-}
 
--- PolyId : (ℓ : Level) → Set (lsuc ℓ)
--- PolyId ℓ = (X : Set ℓ) → X → X
+    g1fst0y : ∀ {ℓ} {A1 A2 : Set ℓ} {B : A1 × A2 → Set ℓ}
+             → (g : Gph2 i0 i1 A1 A2 B) → g1fsty {B = B} i0 g ≡ g
+    {-# REWRITE g1fst0y #-}
 
--- module paramId {ℓ} (A : Set ℓ) (pdA : isPathDiscrete A) (B : A → Set ℓ)
---                    (a : A) (b : B a) (α : PolyId ℓ) where
+    g1snd : ∀ {ℓ} {A1 A2 : Set ℓ} {B : A1 × A2 → Set ℓ}
+            → (g : Gph2 i1 i1 A1 A2 B) → B (g1fstx i1 g , g1fsty i1 g)
 
+PolyId : (ℓ : Level) → Set (lsuc ℓ)
+PolyId ℓ = (X : Set ℓ) → X → X
 
---     lemma0 : (i : I) → Gph1 i A B
---     lemma0 i = α (Gph1 i A B) (g1pair i a (λ _ → b))
+module paramId {ℓ} (A1 A2 : Set ℓ)
+  (pdA1 : isPathDiscrete A1)
+  (pdA2 : isPathDiscrete A2)
+  (B : A1 × A2 → Set ℓ)
+  (a : A1 × A2) (b : B a) (α : PolyId ℓ) where
 
---     lemma1 : B (g1fst i1 (lemma0 i1))
---     lemma1 = g1snd (lemma0 i1)
+    a1 = fst a
+    a2 = snd a
 
---     lemma2 : Path (λ _ → A) (α A a) (g1fst i1 (lemma0 i1))
---     lemma2 = pabs (λ i → g1fst i (lemma0 i))
+    lemma0 : (ix iy : I) → Gph2 ix iy A1 A2 B
+    lemma0 ix iy = α (Gph2 ix iy A1 A2 B) (g1pair ix iy a (λ _ _ → b))
 
---     substLemma : B (α A a)
---     substLemma = transp⁻¹ B (mkInv idToPath pdA lemma2) lemma1
+    lemma2x : Path (λ _ → A1) (α A1 a1) (g1fstx i1 (lemma0 i1 i1))
+    lemma2x = pabs (λ i → g1fstx i (lemma0 i1 i))
+
+    lemma2y : Path (λ _ → A2) (α A2 a2) (g1fsty i1 (lemma0 i1 i1))
+    lemma2y = pabs (λ i → g1fsty i (lemma0 i i1))
+
+    substLemma1 : B (g1fstx i1 (lemma0 i1 i1) , g1fsty i1 (lemma0 i1 i1))
+    substLemma1 = g1snd (lemma0 i1 i1)
+
+    substLemma0 : B (α A1 a1 , g1fsty i1 (lemma0 i1 i1))
+    substLemma0 = transp⁻¹ (λ z → B (z , g1fsty i1 (lemma0 i1 i1))) (mkInv idToPath pdA1 lemma2x) substLemma1
+
+    substLemma : B (α A1 a1 , α A2 a2)
+    substLemma = transp⁻¹ (λ z → B (α A1 a1 , z)) (mkInv idToPath pdA2 lemma2y) substLemma0
