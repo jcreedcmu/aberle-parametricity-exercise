@@ -140,52 +140,52 @@ postulate
 postulate
     Gph2 : ∀ {ℓ} (ix iy : I) (A1 A2 : Set ℓ) (B : A1 × A2 → Set ℓ) → Set (ℓ)
 
-    g1rw0x : ∀ {ℓ} (A1 A2 : Set ℓ) (B : A1 × A2 → Set ℓ) → Gph2 i1 i0 A1 A2 B ≡ A1
-    {-# REWRITE g1rw0x #-}
+    g2rw0x : ∀ {ℓ} (A1 A2 : Set ℓ) (B : A1 × A2 → Set ℓ) → Gph2 i1 i0 A1 A2 B ≡ A1
+    {-# REWRITE g2rw0x #-}
 
-    g1rw0y : ∀ {ℓ} (A1 A2 : Set ℓ) (B : A1 × A2 → Set ℓ) → Gph2 i0 i1 A1 A2 B ≡ A2
-    {-# REWRITE g1rw0y #-}
+    g2rw0y : ∀ {ℓ} (A1 A2 : Set ℓ) (B : A1 × A2 → Set ℓ) → Gph2 i0 i1 A1 A2 B ≡ A2
+    {-# REWRITE g2rw0y #-}
 
 
-    g1pair : ∀ {ℓ} {A1 A2 : Set ℓ} {B : A1 × A2 → Set ℓ} (ix iy : I)
+    g2pair : ∀ {ℓ} {A1 A2 : Set ℓ} {B : A1 × A2 → Set ℓ} (ix iy : I)
              → (a : A1 × A2) (b : (ix ≡ i1) → (iy ≡ i1) → B a) → Gph2 ix iy A1 A2 B
 
-    g1pair10 : ∀ {ℓ} {A1 A2 : Set ℓ} {B : A1 × A2 → Set ℓ}
+    g2pair10 : ∀ {ℓ} {A1 A2 : Set ℓ} {B : A1 × A2 → Set ℓ}
               → (a : A1 × A2) → (b : (i1 ≡ i1) → (i0 ≡ i1) → B a)
-              → g1pair {B = B} i1 i0 a b ≡ fst a
-    {-# REWRITE g1pair10 #-}
+              → g2pair {B = B} i1 i0 a b ≡ fst a
+    {-# REWRITE g2pair10 #-}
 
-    g1pair01 : ∀ {ℓ} {A1 A2 : Set ℓ} {B : A1 × A2 → Set ℓ}
+    g2pair01 : ∀ {ℓ} {A1 A2 : Set ℓ} {B : A1 × A2 → Set ℓ}
               → (a : A1 × A2) → (b : (i0 ≡ i1) → (i1 ≡ i1) → B a)
-              → g1pair {B = B} i0 i1 a b ≡ snd a
-    {-# REWRITE g1pair01 #-}
+              → g2pair {B = B} i0 i1 a b ≡ snd a
+    {-# REWRITE g2pair01 #-}
 
-    g1fstx : ∀ {ℓ} {A1 A2 : Set ℓ} {B : A1 × A2 → Set ℓ} (iy : I)
+    g2fstx : ∀ {ℓ} {A1 A2 : Set ℓ} {B : A1 × A2 → Set ℓ} (iy : I)
             → (g : Gph2 i1 iy A1 A2 B) → A1
 
-    g1fsty : ∀ {ℓ} {A1 A2 : Set ℓ} {B : A1 × A2 → Set ℓ} (ix : I)
+    g2fsty : ∀ {ℓ} {A1 A2 : Set ℓ} {B : A1 × A2 → Set ℓ} (ix : I)
             → (g : Gph2 ix i1 A1 A2 B) → A2
 
-    g1beta1x : ∀ {ℓ} {A1 A2 : Set ℓ} {B : A1 × A2 → Set ℓ} (iy : I)
+    g2beta1x : ∀ {ℓ} {A1 A2 : Set ℓ} {B : A1 × A2 → Set ℓ} (iy : I)
               → (a : A1 × A2) (b : (i1 ≡ i1) → (iy ≡ i1) → B a)
-              → g1fstx iy (g1pair {B = B} i1 iy a b) ≡ fst a
-    {-# REWRITE g1beta1x #-}
+              → g2fstx iy (g2pair {B = B} i1 iy a b) ≡ fst a
+    {-# REWRITE g2beta1x #-}
 
-    g1beta1y : ∀ {ℓ} {A1 A2 : Set ℓ} {B : A1 × A2 → Set ℓ} (ix : I)
+    g2beta1y : ∀ {ℓ} {A1 A2 : Set ℓ} {B : A1 × A2 → Set ℓ} (ix : I)
               → (a : A1 × A2) (b : (ix ≡ i1) → (i1 ≡ i1) → B a)
-              → g1fsty ix (g1pair {B = B} ix i1 a b) ≡ snd a
-    {-# REWRITE g1beta1y #-}
+              → g2fsty ix (g2pair {B = B} ix i1 a b) ≡ snd a
+    {-# REWRITE g2beta1y #-}
 
-    g1fst0x : ∀ {ℓ} {A1 A2 : Set ℓ} {B : A1 × A2 → Set ℓ}
-             → (g : Gph2 i1 i0 A1 A2 B) → g1fstx {B = B} i0 g ≡ g
-    {-# REWRITE g1fst0x #-}
+    g2fst0x : ∀ {ℓ} {A1 A2 : Set ℓ} {B : A1 × A2 → Set ℓ}
+             → (g : Gph2 i1 i0 A1 A2 B) → g2fstx {B = B} i0 g ≡ g
+    {-# REWRITE g2fst0x #-}
 
-    g1fst0y : ∀ {ℓ} {A1 A2 : Set ℓ} {B : A1 × A2 → Set ℓ}
-             → (g : Gph2 i0 i1 A1 A2 B) → g1fsty {B = B} i0 g ≡ g
-    {-# REWRITE g1fst0y #-}
+    g2fst0y : ∀ {ℓ} {A1 A2 : Set ℓ} {B : A1 × A2 → Set ℓ}
+             → (g : Gph2 i0 i1 A1 A2 B) → g2fsty {B = B} i0 g ≡ g
+    {-# REWRITE g2fst0y #-}
 
-    g1snd : ∀ {ℓ} {A1 A2 : Set ℓ} {B : A1 × A2 → Set ℓ}
-            → (g : Gph2 i1 i1 A1 A2 B) → B (g1fstx i1 g , g1fsty i1 g)
+    g2snd : ∀ {ℓ} {A1 A2 : Set ℓ} {B : A1 × A2 → Set ℓ}
+            → (g : Gph2 i1 i1 A1 A2 B) → B (g2fstx i1 g , g2fsty i1 g)
 
 PolyId : (ℓ : Level) → Set (lsuc ℓ)
 PolyId ℓ = (X : Set ℓ) → X → X
@@ -200,19 +200,19 @@ module paramId {ℓ} (A1 A2 : Set ℓ)
     a2 = snd a
 
     lemma0 : (ix iy : I) → Gph2 ix iy A1 A2 B
-    lemma0 ix iy = α (Gph2 ix iy A1 A2 B) (g1pair ix iy a (λ _ _ → b))
+    lemma0 ix iy = α (Gph2 ix iy A1 A2 B) (g2pair ix iy a (λ _ _ → b))
 
-    lemma2x : Path (λ _ → A1) (α A1 a1) (g1fstx i1 (lemma0 i1 i1))
-    lemma2x = pabs (λ i → g1fstx i (lemma0 i1 i))
+    lemma2x : Path (λ _ → A1) (α A1 a1) (g2fstx i1 (lemma0 i1 i1))
+    lemma2x = pabs (λ i → g2fstx i (lemma0 i1 i))
 
-    lemma2y : Path (λ _ → A2) (α A2 a2) (g1fsty i1 (lemma0 i1 i1))
-    lemma2y = pabs (λ i → g1fsty i (lemma0 i i1))
+    lemma2y : Path (λ _ → A2) (α A2 a2) (g2fsty i1 (lemma0 i1 i1))
+    lemma2y = pabs (λ i → g2fsty i (lemma0 i i1))
 
-    substLemma1 : B (g1fstx i1 (lemma0 i1 i1) , g1fsty i1 (lemma0 i1 i1))
-    substLemma1 = g1snd (lemma0 i1 i1)
+    substLemma1 : B (g2fstx i1 (lemma0 i1 i1) , g2fsty i1 (lemma0 i1 i1))
+    substLemma1 = g2snd (lemma0 i1 i1)
 
-    substLemma0 : B (α A1 a1 , g1fsty i1 (lemma0 i1 i1))
-    substLemma0 = transp⁻¹ (λ z → B (z , g1fsty i1 (lemma0 i1 i1))) (mkInv idToPath pdA1 lemma2x) substLemma1
+    substLemma0 : B (α A1 a1 , g2fsty i1 (lemma0 i1 i1))
+    substLemma0 = transp⁻¹ (λ z → B (z , g2fsty i1 (lemma0 i1 i1))) (mkInv idToPath pdA1 lemma2x) substLemma1
 
     substLemma : B (α A1 a1 , α A2 a2)
     substLemma = transp⁻¹ (λ z → B (α A1 a1 , z)) (mkInv idToPath pdA2 lemma2y) substLemma0
