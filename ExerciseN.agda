@@ -34,7 +34,6 @@ module hott where
                → (B : A → Set κ) → (a ≡ b) → B b → B a
     transp⁻¹ B p b = J⁻¹ (λ a _ → B a) p b
 
-
     ap : ∀ {ℓ κ} {A : Set ℓ} {B : Set κ} {a b : A}
          → (f : A → B) → a ≡ b → f a ≡ f b
     ap f refl = refl
@@ -54,7 +53,6 @@ module hott where
     mkInv f e b = fst (fst (e b))
 
 open hott
-
 
 module cohesion where
 
@@ -152,6 +150,9 @@ postulate
   conn-refl : (k : K) → qconn k i1 ≡ refl
   {-# REWRITE conn-refl #-}
 
+  funextK : ∀ {ℓ} {B : K → Set ℓ} {b1 b2 : (k : K) → B k}
+             → ((k : K) → b1 k ≡ b2 k) → b1 ≡ b2
+
 Π : ∀ {ℓ} (A : K → Set ℓ) → Set ℓ
 Π A = (k : K) → A k
 
@@ -193,8 +194,6 @@ postulate
 PolyId : (ℓ : Level) → Set (lsuc ℓ)
 PolyId ℓ = (X : Set ℓ) → X → X
 
-
-
 module paramId {ℓ} (A : K → Set ℓ)
   (pdA : (k : K) → isPathDiscrete (A k))
   (B : Π A → Set ℓ)
@@ -203,16 +202,16 @@ module paramId {ℓ} (A : K → Set ℓ)
     lemma0 : (i : K → I) → Gph i A B
     lemma0 i = α (Gph i A B) (g-pair i a (λ _ → b))
 
+    lemma1 : B (λ k → g-fst ki1 k refl (lemma0 ki1))
+    lemma1 = g-snd (lemma0 ki1)
+
     lemma2 : (k : K) → Path (λ _ → A k)  (α (A k) (a k)) (g-fst ki1 k refl (lemma0 ki1))
 
     lemma2 k = pabs (λ i → g-fst (λ k' → conn k k' i) k (qconn k i)
                             (lemma0 (λ k' → conn k k' i)))
 
-    -- substLemma1 : B (g-fstx i1 (lemma0 i1 i1) , g-fsty i1 (lemma0 i1 i1))
-    -- substLemma1 = g-snd (lemma0 i1 i1)
+    transportPath : (k : K) → α (A k) (a k) ≡ g-fst ki1 k refl (lemma0 ki1)
+    transportPath k = mkInv idToPath (pdA k) (lemma2 k)
 
-    -- substLemma0 : B (α A1 a1 , g-fsty i1 (lemma0 i1 i1))
-    -- substLemma0 = transp⁻¹ (λ z → B (z , g-fsty i1 (lemma0 i1 i1))) (mkInv idToPath pdA1 lemma2x) substLemma1
-
-    -- substLemma : B (α A1 a1 , α A2 a2)
-    -- substLemma = transp⁻¹ (λ z → B (α A1 a1 , z)) (mkInv idToPath pdA2 lemma2y) substLemma0
+    substLemma : B (λ k → α (A k) (a k))
+    substLemma = transp⁻¹ B (funextK transportPath) lemma1
