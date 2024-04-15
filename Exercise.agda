@@ -143,42 +143,51 @@ postulate
                    → pathConst2 dA (pabs (λ _ → a)) refl refl ≡ refl
     {-# REWRITE rwPathConst2 #-}
 
--- postulate
---     Gph1 : ∀ {ℓ} (i : I) (A : Set ℓ) (B : A → Set ℓ) → Set (ℓ)
+postulate
+    Gph1 : ∀ {ℓ} (i : I) (A1 A2 : Set ℓ) (B : A1 × A2 → Set ℓ) → Set (ℓ)
 
---     g1rw0 : ∀ {ℓ} (A : Set ℓ) (B : A → Set ℓ) → Gph1 i0 A B ≡ A
---     {-# REWRITE g1rw0 #-}
+    g1rwx : ∀ {ℓ} (A1 A2 : Set ℓ) (B : A1 × A2 → Set ℓ) → Gph1 ix A1 A2 B ≡ A1
+    {-# REWRITE g1rwx #-}
+
+    g1rwy : ∀ {ℓ} (A1 A2 : Set ℓ) (B : A1 × A2 → Set ℓ) → Gph1 iy A1 A2 B ≡ A2
+    {-# REWRITE g1rwy #-}
+
+    g1pair : ∀ {ℓ} {A1 A2 : Set ℓ} {B : A1 × A2 → Set ℓ} (i : I)
+             → (a : A1 × A2) → (b : (i ≡ i1) → B a) → Gph1 i A1 A2 B
+
+    g1pairx : ∀ {ℓ} {A1 A2 : Set ℓ} {B : A1 × A2 → Set ℓ}
+              → (a : A1 × A2) → (b : (ix ≡ i1) → B a)
+              → g1pair {B = B} ix a b ≡ fst a
+    {-# REWRITE g1pairx #-}
+
+    g1pairy : ∀ {ℓ} {A1 A2 : Set ℓ} {B : A1 × A2 → Set ℓ}
+              → (a : A1 × A2) → (b : (iy ≡ i1) → B a)
+              → g1pair {B = B} iy a b ≡ snd a
+    {-# REWRITE g1pairy #-}
+
+    g1fstx : ∀ {ℓ} {A1 A2 : Set ℓ} {B : A1 × A2 → Set ℓ}
+            → (g : Gph1 ix A1 A2 B) → A1
+
+    g1fsty : ∀ {ℓ} {A1 A2 : Set ℓ} {B : A1 × A2 → Set ℓ}
+            → (g : Gph1 iy A1 A2 B) → A2
+
+    g1beta1 : ∀ {ℓ} {A1 A2 : Set ℓ} {B : A1 × A2 → Set ℓ} (i : I)
+              → (a : A1 × A2) → (b : (i ≡ i1) → B a)
+              → g1fst i (g1pair {B = B} i a b) ≡ a
+    {-# REWRITE g1beta1 #-}
+
+    g1fstx : ∀ {ℓ} {A1 A2 : Set ℓ} {B : A1 × A2 → Set ℓ}
+             → (g : Gph1 ix A1 A2 B) → g1fst {B = B} ix g ≡ {!!}
+    {-# REWRITE g1fstx #-}
 
 
---     g1pair : ∀ {ℓ} {A : Set ℓ} {B : A → Set ℓ} (i : I)
---              → (a : A) → (b : (i ≡ i1) → B a) → Gph1 i A B
+    -- g1snd : ∀ {ℓ} {A : Set ℓ} {B : A → Set ℓ}
+    --         → (g : Gph1 i1 A B) → B (g1fst i1 g)
 
---     g1pair0 : ∀ {ℓ} {A : Set ℓ} {B : A → Set ℓ}
---               → (a : A) → (b : (i0 ≡ i1) → B a)
---               → g1pair {B = B} i0 a b ≡ a
---     {-# REWRITE g1pair0 #-}
-
-
---     g1fst : ∀ {ℓ} {A : Set ℓ} {B : A → Set ℓ} (i : I)
---             → (g : Gph1 i A B) → A
-
---     g1beta1 : ∀ {ℓ} {A : Set ℓ} {B : A → Set ℓ} (i : I)
---               → (a : A) → (b : (i ≡ i1) → B a)
---               → g1fst i (g1pair {B = B} i a b) ≡ a
---     {-# REWRITE g1beta1 #-}
-
---     g1fst0 : ∀ {ℓ} {A : Set ℓ} {B : A → Set ℓ}
---              → (g : Gph1 i0 A B) → g1fst {B = B} i0 g ≡ g
---     {-# REWRITE g1fst0 #-}
-
-
---     g1snd : ∀ {ℓ} {A : Set ℓ} {B : A → Set ℓ}
---             → (g : Gph1 i1 A B) → B (g1fst i1 g)
-
---     g1beta2 : ∀ {ℓ} {A : Set ℓ} {B : A → Set ℓ}
---               → (a : A) → (b : (i1 ≡ i1) → B a)
---               → g1snd (g1pair {B = B} i1 a b) ≡ b refl
---     {-# REWRITE g1beta2 #-}
+    -- g1beta2 : ∀ {ℓ} {A : Set ℓ} {B : A → Set ℓ}
+    --           → (a : A) → (b : (i1 ≡ i1) → B a)
+    --           → g1snd (g1pair {B = B} i1 a b) ≡ b refl
+    -- {-# REWRITE g1beta2 #-}
 
 
 -- strBpt : (i0 ≡ i1) → ⊥
