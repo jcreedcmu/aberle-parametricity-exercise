@@ -162,8 +162,8 @@ ki1 k = i1
 postulate
     Gph : ∀ {ℓ} (i : K → I) (A : K → Set ℓ) (B : Π A → Set ℓ) → Set (ℓ)
 
-    g2rw0k : ∀ {ℓ} (A : K → Set ℓ) (B : Π A → Set ℓ) (k : K) → Gph (λ k' → conn k k' i0) A B ≡ A k
-    {-# REWRITE g2rw0k #-}
+    g-rw0k : ∀ {ℓ} (A : K → Set ℓ) (B : Π A → Set ℓ) (k : K) → Gph (λ k' → conn k k' i0) A B ≡ A k
+    {-# REWRITE g-rw0k #-}
 
     g-pair : ∀ {ℓ} {A : K → Set ℓ} {B : Π A → Set ℓ} (i : K → I)
              → (a : Π A) (b : ((k : K) → i k ≡ i1) → B a) → Gph i A B
@@ -183,10 +183,10 @@ postulate
               → g-fst i k q (g-pair {B = B} i a b) ≡ a k
     {-# REWRITE g-beta1 #-}
 
-    g2fst0k : ∀ {ℓ} {A : K → Set ℓ} {B : Π A → Set ℓ} {k : K}
+    g-fst0k : ∀ {ℓ} {A : K → Set ℓ} {B : Π A → Set ℓ} {k : K}
              → (g : Gph (λ k' → conn k k' i0) A B)
              → g-fst {B = B} (λ k' → conn k k' i0) k (qconn k i0) g ≡ g
-    {-# REWRITE g2fst0k #-}
+    {-# REWRITE g-fst0k #-}
 
     g-snd : ∀ {ℓ} {A : K → Set ℓ} {B : Π A → Set ℓ}
             → (g : Gph ki1 A B) → B (λ k → g-fst ki1 k refl g)
