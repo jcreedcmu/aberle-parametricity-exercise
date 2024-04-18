@@ -2,7 +2,7 @@
 
 pkgs.mkShell {
   buildInputs = [
-    (pkgs.agda.withPackages (ps: [ ps.standard-library ]))
+    (pkgs.agda.withPackages (ps: [ ps.standard-library ps.cubical ]))
   ];
 }
 
